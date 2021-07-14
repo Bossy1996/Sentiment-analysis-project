@@ -1,3 +1,4 @@
 Pipfile.lock
 sentiment_analysis_project/__pycache__
 data/aclImdb_v1
+data/aclImdb_v1.tar.gz
