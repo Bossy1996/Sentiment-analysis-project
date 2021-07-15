@@ -1,6 +1,8 @@
 import os
 from posix import listdir
 import random
+import re
+from numpy import recarray
 import spacy
 from spacy.util import minibatch, compounding
 from thinc import optimizers
@@ -76,3 +78,36 @@ def training_model(
                     sgd=optimizer,
                     losses=loss
                 )
+
+def evaluate_model(
+    tokenizer, textcat, test_data: list
+) -> dict:
+    reviews, labels = zip(*test_data)
+    reviews = (tokenizer(review) for review in reviews)
+    true_positives = 0
+    false_positives = 1e-8 # Can't be 0 because of presence in denominator
+    true_negatives = 0
+    false_negatives = 1e-8
+    for i, review in enumerate(textcat.pipe(reviews)):
+        true_label = labels[i]
+        for predicted_label, score in review.cats.items():
+            # Every cats dictionary includes both labels. you can get all
+            # the info you need with just the pos label.
+            if (predicted_label == "neg"):
+                continue
+            if score >= 0.5 and true_label["pos"]:
+                true_positives += 1
+            elif score >= 0.5 and true_label["neg"]:
+                false_positives += 1
+            elif score < 0.5 and true_label["neg"]:
+                true_negatives += 1
+            elif score < 0.5 and true_label["pos"]:
+                false_negatives += 1
+    precision = true_positives / (true_positives + false_positives)
+    recall = true_positives / (true_positives + false_negatives)
+
+    if precision + recall == 0:
+        f_score = 0
+    else:
+        f_score = 2 * (precision * recall) / (precision + recall)
+    return {"precision": precision, "recall": recall, "f-score": f_score}
