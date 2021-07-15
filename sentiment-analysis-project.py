@@ -1,5 +1,7 @@
 import os
+from posix import listdir
 import random
+import spacy
 
 def load_training_data(
     data_directory: str = "data/aclImdb_v1/aclImdb/train", 
@@ -29,3 +31,21 @@ def load_training_data(
         reviews = reviews[:limit]
     split = int(len(reviews) * split)
     return reviews[:split], reviews[split:]
+
+def training_model(
+    training_data: list,
+    test_data: list,
+    iterations: int = 20
+) -> None:
+    # Build pipeline
+    nlp = spacy.load("en_core_web_sm")
+    if "textcat" not in nlp.pipe_names:
+        textcat = nlp.create_pipe(
+            "textcat", config={"architecture": "simple_cnn"}
+        )
+        nlp.add_pipe(textcat, last=True)
+    else:
+        textcat = nlp.get_pipe("textcat")
+
+    textcat.add_label("pos")
+    textcat.add_label("neg")
