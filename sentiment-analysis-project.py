@@ -62,6 +62,7 @@ def training_model(
         optimizer = nlp.begin_training()
         # Training loop
         print("Beginning training")
+        print("Loss\tPrecision\tRecall\tF-score")
         batch_sizes = compounding(
             4.0, 32.0, 1.001
         ) # A generator that yields infinite series of input numbers
@@ -78,6 +79,20 @@ def training_model(
                     sgd=optimizer,
                     losses=loss
                 )
+            with textcat.model.use_params(optimizer.averages):
+                evaluation_results = evaluate_model(
+                    tokenizer=nlp.tokenizer,
+                    textcat=textcat,
+                    test_data=test_data
+                )
+                print(
+                    f"{loss['textcat']}\t{evaluation_results['precision']}"
+                    f"\t{evaluation_results['recall']}"
+                    f"\t{evaluation_results['f-score']}"
+                )
+    # Save model
+    with nlp.use_params(optimizer.averages):
+        nlp.to_disk("model_artifacts")
 
 def evaluate_model(
     tokenizer, textcat, test_data: list
