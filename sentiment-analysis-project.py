@@ -1,11 +1,21 @@
+from ast import parse
 import os
 from posix import listdir
 import random
 import re
 from numpy import recarray
+from numpy.lib.npyio import load
 import spacy
 from spacy.util import minibatch, compounding
 from thinc import optimizers
+
+TEST_REVIEW = """
+Transcendently beautiful in moments outside the office, it seems almost
+sitcom-like in those scenes. When Toni Colette walks out and ponders
+life silently, it's gorgeous.<br /><br />The movie doesn't seem to decide
+whether it's slapstick, farce, magical realism, or drama, but the best of it
+doesn't matter. (The worst is sort of tedious - like Office Space with less humor.)
+"""
 
 def load_training_data(
     data_directory: str = "data/aclImdb_v1/aclImdb/train", 
@@ -126,3 +136,20 @@ def evaluate_model(
     else:
         f_score = 2 * (precision * recall) / (precision + recall)
     return {"precision": precision, "recall": recall, "f-score": f_score}
+
+def test_model(input_data: str=TEST_REVIEW):
+    # Load saved trained model
+    loaded_model = spacy.load("model_artifacts")
+    # Generate prediction
+    parsed_text = loaded_model(input_data)
+    # Determine prediction to return
+    if parsed_text.cats["pos"] > parsed_text.cats["neg"]:
+        prediction = "Positive"
+        score = parsed_text.cats["pos"]
+    else:
+        prediction = "Negative"
+        score = parsed_text.cats["neg"]
+    print(
+        f"Review text: {input_data}\nPredicted sentiment: {prediction}"
+        f"\tScore: {score}"
+    )
