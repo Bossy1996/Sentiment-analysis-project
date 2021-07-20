@@ -154,8 +154,9 @@ def test_model(input_data: str=TEST_REVIEW):
         f"\tScore: {score}"
     )
 
-if __name__ == "__main__":
-    train, test = load_training_data(limit=2500)
-    training_model(train, test)
-    print("Testing model")
-    test_model()
+# Local run
+# if __name__ == "__main__":
+#     train, test = load_training_data(limit=2500)
+#     training_model(train, test)
+#     print("Testing model")
+#     test_model()
