@@ -2,6 +2,7 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from random import shuffle
 from statistics import mean
+from nltk.tokenize import word_tokenize
 
 from numpy import negative
 
@@ -43,3 +44,17 @@ for review_id in all_review_ids:
             if review_id in negative_review_ids:
                 correct += 1
 print(F"{correct / len(all_review_ids):.2%} correct")
+
+unwanted = nltk.corpus.stopwords.words("english")
+unwanted.extend([w.lower() for w in nltk.corpus.names.words()])
+
+def skip_unwanted(pos_tuple):
+    word, tag = pos_tuple
+    if not word.isalpha() or word in unwanted:
+        return False
+    if tag.startswith("NN"):
+        return False
+    return True
+
+positive_words = [word for word, tag in filter(skip_unwanted, nltk.pos_tag(nltk.corpus.movie_review.words(categories=["pos"])))]
+negative_words = [word for word, tag in filter(skip_unwanted, nltk.pos_tag(nltk.corpus.movie_review.words(categories=["neg"])))]
