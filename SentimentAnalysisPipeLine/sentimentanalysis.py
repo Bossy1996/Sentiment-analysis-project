@@ -10,16 +10,16 @@ from numpy import negative
 # Creates an instance of the SentimentIntensityAnalyzer
 sia = SentimentIntensityAnalyzer()
 
-# Load twitter sample corpus. strings gives you raw tweets as strings
-tweets = [t.replace("://", "//") for t in nltk.corpus.twitter_samples.strings()]
+# # Load twitter sample corpus. strings gives you raw tweets as strings
+# tweets = [t.replace("://", "//") for t in nltk.corpus.twitter_samples.strings()]
 
-def is_positive(tweet: str) -> bool:
-    """True if tweet has positive compound sentiment, False otherwise"""
-    return sia.polarity_scores(tweet)["compound"] > 0
+# def is_positive(tweet: str) -> bool:
+#     """True if tweet has positive compound sentiment, False otherwise"""
+#     return sia.polarity_scores(tweet)["compound"] > 0
 
-shuffle(tweets)
-""" for tweet in tweets[:10]:
-    print(">", is_positive(tweet), tweet) """
+# shuffle(tweets)
+# """ for tweet in tweets[:10]:
+#     print(">", is_positive(tweet), tweet) """
 
 # Movie Review example
 positive_review_ids = nltk.corpus.movie_reviews.fileids(categories=["pos"])
