@@ -1,4 +1,3 @@
-from ssl import SOCK_STREAM
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from random import shuffle
