@@ -71,7 +71,7 @@ for word in common_set:
 
 top_100_positive = {word for word, count in positive_fd.most_common(100)}
 top_100_negative = {word for word, count in negative_fd.most_common(100)}
-""" 
+
 positive_bigram_finder = nltk.collocations.BigramCollocationFinder.from_words([
     w for w in nltk.corpus.movie_reviews.words(categories=["pos"])
     if w.isalpha() and w not in unwanted
@@ -79,7 +79,7 @@ positive_bigram_finder = nltk.collocations.BigramCollocationFinder.from_words([
 negative_bigram_finder = nltk.collocations.BigramCollocationFinder.from_words([
     w for w in nltk.corpus.movie_reviews.words(categories=["neg"])
     if w.isalpha() and w not in unwanted
-]) """
+])
 
 # Training and using a Classifier
 
