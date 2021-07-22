@@ -1,4 +1,5 @@
 import nltk
+from nltk.classify.decisiontree import f
 
 nltk.download([
     "names",
@@ -32,3 +33,13 @@ pprint(nltk.word_tokenize(text), width=79, compact=True)
 words: list[str] = nltk.word_tokenize(text)
 
 fd = nltk.FreqDist(words)
+
+fd.most_common(3)
+fd.tabulate(3)
+
+fd["America"]
+fd["america"]
+fd["AMERICA"]
+
+lower = nltk.FreqDist([w.lower() for w in fd])
+
