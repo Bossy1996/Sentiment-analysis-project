@@ -58,3 +58,15 @@ def skip_unwanted(pos_tuple):
 
 positive_words = [word for word, tag in filter(skip_unwanted, nltk.pos_tag(nltk.corpus.movie_review.words(categories=["pos"])))]
 negative_words = [word for word, tag in filter(skip_unwanted, nltk.pos_tag(nltk.corpus.movie_review.words(categories=["neg"])))]
+
+positive_fd = nltk.FreqDist(positive_words)
+negative_fd = nltk.FreqDist(negative_words)
+
+common_set = set(positive_fd).intersection(negative_fd)
+
+for word in common_set:
+    del positive_fd[word]
+    del negative_fd[word]
+
+top_100_positive = {word for word, count in positive_fd.most_common(100)}
+top_100_negative = {word for word, count in negative_fd.most_common(100)}
